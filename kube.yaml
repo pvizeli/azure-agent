@@ -6,9 +6,9 @@ metadata:
   name: vsts
 type: Opaque
 stringData:
-  azpUrl: {{url}}
-  azpToken: {{token}}
-  azpPool: {{name}}
+  azpUrl: "{{url}}"
+  azpToken: "{{token}}"
+  azpPool: "{{name}}"
 
 ---
 apiVersion: v1
@@ -49,3 +49,48 @@ spec:
       - name: docker-volume
         hostPath:
           path: /run/docker.sock
+      nodeSelector:
+      - kubernetes.io/arch=arm64
+
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  namespace: azure
+  name: vsts-agent
+spec:
+  replicas: 8
+  template:
+    metadata:
+      labels:
+        app: vsts-agent
+    spec:
+      containers:
+      - name: vsts-agent
+        image: pvizeli/azure-agent:1.0-amd64
+        env:
+          - name: AZP_URL
+            valueFrom:
+              secretKeyRef:
+                name: vsts
+                key: azpUrl
+          - name: AZP_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: vsts
+                key: azpToken
+          - name: AZP_POOL
+            valueFrom:
+              secretKeyRef:
+                name: vsts
+                key: azpPool
+        volumeMounts:
+        - mountPath: /run/docker.sock
+          name: docker-volume
+      volumes:
+      - name: docker-volume
+        hostPath:
+          path: /run/docker.sock
+      nodeSelector:
+      - kubernetes.io/arch=amd64
+      
