@@ -19,7 +19,16 @@ RUN apt-get update \
         libcurl4 \
         libicu60 \
         libunwind8 \
-        netcat
+        netcat \
+        apt-transport-https \
+        software-properties-common \
+        gpg-agent \
+    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
+    && add-apt-repository "deb https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+    && apt-get update && apt-get install -y --no-install-recommends \
+        docker-ce \
+        docker-ce-cli \
+        containerd.io
 
 WORKDIR /azp
 
