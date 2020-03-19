@@ -29,7 +29,11 @@ RUN apt-get update \
     && apt-get update && apt-get install -y --no-install-recommends \
         docker-ce \
         docker-ce-cli \
-        containerd.io
+        containerd.io \
+    && apt-get purge -y --auto-remove \
+        apt-transport-https \
+        software-properties-common \
+        gnupg2
 
 WORKDIR /azp
 
