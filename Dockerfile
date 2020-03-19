@@ -1,5 +1,5 @@
 ARG BUILD_FROM
-FROM ${BUILD_FROM}:18.04
+FROM ${BUILD_FROM}:16.04
 
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
@@ -16,13 +16,13 @@ RUN apt-get update \
         jq \
         git \
         iputils-ping \
-        libcurl4 \
-        libicu60 \
+        libcurl3 \
+        libicu55 \
         libunwind8 \
         netcat \
         apt-transport-https \
         software-properties-common \
-        gpg-agent \
+        gnupg2 \
     && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
     && add-apt-repository "deb https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
     && apt-get update && apt-get install -y --no-install-recommends \
